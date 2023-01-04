@@ -16,7 +16,7 @@ using namespace std;
 
 
 // Prim's Algorithm
-class MInimumSpanningTree {
+class MinimumSpanningTree {
 public:
 	using datatype = int;
 
@@ -32,8 +32,8 @@ public:
 
 
 public:
-	MInimumSpanningTree() {}
-	MInimumSpanningTree(int vertexCnt) { Assign(vertexCnt); }
+	MinimumSpanningTree() {}
+	MinimumSpanningTree(int vertexCnt) { Assign(vertexCnt); }
 
 	void Assign(int vertexCnt) {
 		mVertexCnt = vertexCnt;

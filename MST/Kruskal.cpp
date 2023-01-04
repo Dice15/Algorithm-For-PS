@@ -50,7 +50,7 @@ public:
 
 
 // Kruskal's Algorithm
-class MInimumSpanningTree {
+class MinimumSpanningTree {
 public:
 	using datatype = int;
 
@@ -69,8 +69,8 @@ public:
 
 
 public:
-	MInimumSpanningTree() {}
-	MInimumSpanningTree(int vertexCnt, int edgeCnt = 0) { Assign(vertexCnt, edgeCnt); }
+	MinimumSpanningTree() {}
+	MinimumSpanningTree(int vertexCnt, int edgeCnt = 0) { Assign(vertexCnt, edgeCnt); }
 
 	void Assign(int vertexCnt, int edgeCnt = 0) {
 		mVertexCnt = vertexCnt;
@@ -95,7 +95,7 @@ public:
 		for (auto& edge : mEdges) {
 			if (mDisjointSet.Merge(edge.u, edge.v)) {
 				result += edge.weight;
-				if (--obtEdgeCnt) break;
+				if (!(--obtEdgeCnt)) break;
 			}
 		}
 		return result;
