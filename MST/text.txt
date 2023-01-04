@@ -1,0 +1,11 @@
+활용1)
+-  weight들 합이 최소인 스패닝트리(ST) 
+
+활용2)
+- path(u, v)의 weight들 중 최소값이 최대로 (Min-ST)
+- path(u, v)의 weight들 중 최대값이 최소로 (Max-ST)
+
+활용3)
+- weight가 0또는 1일 때, MinST<=k<=MaxSt를 만족한다면
+  weight가 k인 ST를 만들 수 있다.
+https://www.acmicpc.net/board/view/43299
