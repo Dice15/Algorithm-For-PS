@@ -6,6 +6,11 @@
 - path(u, v)의 weight들 중 최대값이 최소로 (Max-ST)
 
 활용3)
-- weight가 0또는 1일 때, MinST<=k<=MaxSt를 만족한다면
+- weight가 0또는 1일 때, MinST<=k<=MaxST를 만족한다면
   weight가 k인 ST를 만들 수 있다.
+
+  i) MinST에서 사용된 1간선은 반드시 사용되어야 한다
+  ii) MaxST에서 사용된 1간선을 추가한다
+  iii) 남은 간선의 수는 0간선으로 채운다
+
 https://www.acmicpc.net/board/view/43299
