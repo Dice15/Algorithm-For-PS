@@ -19,19 +19,17 @@ public:
 	int mSize, mMaxLev;
 	vector<vector<int>> mTable;
 
-
 public:
 	SparseTable() {}
-	SparseTable(int size, int maxLev) { Assign(size, maxLev); }
+	SparseTable(int size, int maxLev) {}
 
 	int& operator[](int idx) { return mTable[idx][0]; }
 
-	void Assign(int size, int maxLev) {
+	void Assgin(int size, int maxLev) {
 		mSize = size;
 		mMaxLev = maxLev;
-		mTable.assign(mSize, vector<int>(mMaxLev, -1e9));
+		mTable.assign(size, vector<int>(maxLev, -1e9));
 	}
-
 
 public:
 	void Construct() {
@@ -43,22 +41,25 @@ public:
 		}
 	}
 
-	int MoveQuery(int idx, int moveCnt) {
+	int MoveUpQuery(int idx, int moveCnt) {
 		for (int j = mMaxLev - 1; j >= 0; j--)
 			if (moveCnt & (int)1 << j) idx = mTable[idx][j];
 		return idx;
 	}
 
-	int LcaQuery(int u, int v, int depGap) {
-		u = MoveQuery(u, depGap);
+	int LcaQuery(int u, int v, int uDep, int vDep) {
+		if (u == v) return u;
+		if (uDep < vDep) swap(u, v);
+		u = MoveUpQuery(u, abs(uDep - vDep));
 		if (u != v) {
 			for (int j = mMaxLev - 1; j >= 0; j--) {
-				if (mTable[u][j] != mTable[v][j]) {   // 음수 처리는 신경쓸 필요가 없다. depth가 같기 때문에 하나가 음수가 되면 다른 하나도 음수가 된다
+				// 음수 처리는 신경쓸 필요가 없다. depth가 같기 때문에 하나가 음수가 되면 다른 하나도 같은 음수값을 가지게 되어 해당 블록을 실행하지 않는다
+				if (mTable[u][j] != mTable[v][j]) {
 					u = mTable[u][j];
 					v = mTable[v][j];
 				}
 			}
-			u = mTable[u][0];   // loop문에서 lca바로 아랫 단계까지 진행했으므로 직속 부모를 찾는다
+			u = mTable[u][0];   // loop문에서 lca의 직속 자식까지 진행했으므로, 현재 노드의 직속 부모가 lca가 된다
 		}
 		return u;
 	}
@@ -67,10 +68,13 @@ public:
 
 class Tree {
 public:
+	// Tree
 	int mSize, mRoot;
 	vector<vector<int>> mAdjList;
-	vector<int> mNodeDepth;
-	SparseTable mParent;
+
+	// LCA
+	vector<int> mDepth;
+	SparseTable mAncestor;
 
 
 public:
@@ -81,8 +85,8 @@ public:
 		mSize = size;
 		mRoot = 0;
 		mAdjList.assign(size, vector<int>());
-		mNodeDepth.assign(size, -1);
-		mParent.Assign(size, (int)ceil(log2(size)) + 1);
+		mDepth.assign(size, -1);
+		mAncestor.Assign(size, (int)ceil(log2(size)) + 1);
 	}
 
 	void Add_UndirectedEdge(int u, int v) {
@@ -92,25 +96,21 @@ public:
 
 
 public:
-	void Construct() {
-		Dfs(-1e9, mRoot, 0);
-		mParent.Construct();
-	}
-
 	void Dfs(int prev, int curr, int depth) {
-		mNodeDepth[curr] = depth;
-		mParent[curr] = prev;
+		mDepth[curr] = depth;
+		mAncestor[curr] = prev;
 		for (auto& next : mAdjList[curr]) {
 			if (prev == next) continue;
 			Dfs(curr, next, depth + 1);
 		}
 	}
 
-	int GetLca(int u, int v) {   // u와 v의 lca
-		if (u == v) return u;
-		if (mNodeDepth[u] < mNodeDepth[v]) swap(u, v);
-		return mParent.LcaQuery(u, v, mNodeDepth[u] - mNodeDepth[v]);
+	void Construct() {
+		Dfs(-1e9, mRoot, 0);
+		mAncestor.Construct();
 	}
 
-	int GetAncestor(int u, int nth) { return mParent.MoveQuery(u, nth); }   // nth번째 조상
+	int GetLca(int u, int v) { return mAncestor.LcaQuery(u, v, mDepth[u], mDepth[v]); }
+
+	int GetAncestor(int u, int nth) { return mAncestor.MoveUpQuery(u, nth); }
 };

@@ -21,28 +21,28 @@ public:
 
 public:
 	DisjointSet() {}
-	DisjointSet(int setSize) { Assign(setSize); }
+	DisjointSet(int size) { Assign(size); }
 
-	void Assign(int setSize) {
-		mSetSize = setSize;
-		mSetTable.assign(setSize, -1);
+	void Assign(int size) {
+		mSetSize = size;
+		mSetTable.assign(size, -1);
 	}
 
 
 public:
 	// val이 속한 집합의 번호를 반환한다
-	int Find(int val) {
-		if (mSetTable[val] < 0) return val;
-		return mSetTable[val] = Find(mSetTable[val]);
+	int Find(int u) {
+		if (mSetTable[u] < 0) return u;
+		return mSetTable[u] = Find(mSetTable[u]);
 	}
 
 	// val1이 속한 집합과 val2가 속한 집합을 합친다. 합치는 것을 성공했다면 true를 아니면 false를 반환한다.
-	bool Merge(int val1, int val2) {
-		val1 = Find(val1);
-		val2 = Find(val2);
-		if (val1 == val2) return false;
-		mSetTable[val1] += mSetTable[val2];   // 두 집합의 크기를 합치는 연산
-		mSetTable[val2] = val1;  // val2의 루트를 val1으로 설정함으로써 두 집합을 합침
+	bool Merge(int u, int v) {
+		u = Find(u);
+		v = Find(v);
+		if (u == v) return false;
+		mSetTable[u] += mSetTable[v];   // 두 집합의 크기를 합치는 연산
+		mSetTable[v] = u;  // val2의 루트를 val1으로 설정함으로써 두 집합을 합침
 		return true;
 	}
 };
