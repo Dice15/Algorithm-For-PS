@@ -57,14 +57,14 @@ public:
 	}
 
 	// 데이터 업데이트 및 새 트리를 구성
-	void Update(int idx, datatype value) { mRoot.push_back(CreateNewNode(idx, value, mRoot.back(), 0, mSize - 1)); }
-	Node* CreateNewNode(int idx, datatype value, Node* node, int currL, int currR) {
+	void Update(int idx, datatype value) { mRoot.push_back(CreateNewTree(idx, value, mRoot.back(), 0, mSize - 1)); }
+	Node* CreateNewTree(int idx, datatype value, Node* node, int currL, int currR) {
 		if (idx < currL || currR < idx) return node;
 		if (currL == currR) return new Node(value);   // 문제에 따라 갱신 or 누적
 		int mid = (currL + currR) >> 1;
 		Node* newNode = new Node();
-		newNode->son[0] = CreateNewNode(idx, value, node->son[0], currL, mid);
-		newNode->son[1] = CreateNewNode(idx, value, node->son[1], mid + 1, currR);
+		newNode->son[0] = CreateNewTree(idx, value, node->son[0], currL, mid);
+		newNode->son[1] = CreateNewTree(idx, value, node->son[1], mid + 1, currR);
 		newNode->value = Operation(newNode->son[0]->value, newNode->son[1]->value);
 		return newNode;
 	}
